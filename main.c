@@ -4,17 +4,17 @@
 #include <mem.h>
 
 int imax = 10, idem = 0, iluachon = 0, iluutru = 0;
-char tmp[90];
+char tmp[75];
 FILE *sv;
 //struct
 typedef struct {
-    char maSV[20];
-    char tenSV[50];
-    char sdtSV[20];
+    char maSV[12];
+    char tenSV[40];
+    char sdtSV[15];
 } sinhvien;
 sinhvien tsv[10];
 
-//HAM CHINH
+//1. HAM CHINH
 void menu();
 
 void luachon(int *ilc);
@@ -27,22 +27,26 @@ void luuSV();
 
 void docSV();
 
-//HAM CHUC NANG
+//2. HAM CHUC NANG
 void trolaimenu();
 
-//ham tro lai menu
-void trolaimenu() {
-    char trolai = 0;
-    printf("Nhan 'ENTER' de tro lai MENU");
-    fflush(stdin);
-    scanf("%c", &trolai);
+void indaugach();
+
+void boxuongdong(char *mang);
+
+void kiemtramasv(char *mang);
+
+//ham main
+int main() {
+    menu();
+    return 0;
 }
 
-//0. Ham menu
+//1.0.0. Ham menu
 void menu() {
     sv = fopen("danhsachsv.txt", "w+");
-    fprintf(sv, "%-39cDANH SACH SINH VIEN\n", ' ');
-    fprintf(sv, "| %-20s | %-50s | %-20s |\n", "Ma sinh vien", "Ten", "So dien thoai");
+    fprintf(sv, "%-29cDANH SACH SINH VIEN\n", ' ');
+    fprintf(sv, "| %-12s | %-19c%-21s | %-15s |\n", "Ma sinh vien", ' ', "Ten", "So dien thoai");
     fclose(sv);
     do {
         luachon(&iluachon);
@@ -58,16 +62,18 @@ void menu() {
                 luuSV();
                 trolaimenu();
                 break;
-            default:
+            case 4:
                 docSV();
                 trolaimenu();
                 break;
+            default :
+                break;
         }
     } while (iluachon != 5);
-    printf("Thoat chuong trinh.");
+    printf("*** Da thoat chuong trinh. ***");
 }
 
-//0. Ham lua chon
+// 1.0. Ham lua chon
 void luachon(int *ilc) {
     printf("----------------MENU----------------\n");
     printf("1. Them sinh vien moi.\n");
@@ -75,7 +81,7 @@ void luachon(int *ilc) {
     printf("3. Luu danh sach sinh vien ra file.\n");
     printf("4. Doc danh sach sinh vien tu file.\n");
     printf("5. Thoat chuong trinh.\n");
-    printf("------------------------------------\n");
+    indaugach();
     scanf("%d", ilc);
     while (!(*ilc == 1 || *ilc == 2 || *ilc == 3 || *ilc == 4 || *ilc == 5)) {
         printf("Lua chon sai.\n");
@@ -84,77 +90,64 @@ void luachon(int *ilc) {
     }
 }
 
-// 1. ham them sinh vien moi
+// 1.1. Ham them sinh vien moi
 void nhapSV() {
-    char choice = 'y';
-    printf("------------------------------------\n");
+    indaugach();
     printf("%6c1.Them sinh vien moi.\n", ' ');
-    printf("------------------------------------");
-    while (idem < imax && (choice == 'Y' || choice == 'y')) {
+    indaugach();
+    if (idem < imax) {
         printf("\nNhap vao thong tin sinh vien thu %d:\n", idem + 1);
-        fflush(stdin);
         printf("- Nhap ma sinh vien: ");
-        fgets(tsv[idem].maSV, 20, stdin);
-        while (strlen(tsv[idem].maSV) != 6) {
-            printf("** LOI: Ma sinh vien phai co 5 ki tu **\n");
-            printf("- Nhap lai ma sinh vien: ");
-            fflush(stdin);
-            fgets(tsv[idem].maSV, 20, stdin);
-        }
-        tsv[idem].maSV[strlen(tsv[idem].maSV) - 1] = ' ';
         fflush(stdin);
+        fgets(tsv[idem].maSV, 12, stdin);
+        kiemtramasv(tsv[idem].maSV);
+        boxuongdong(tsv[idem].maSV);
         printf("- Nhap ho ten sinh vien: ");
-        fgets(tsv[idem].tenSV, 50, stdin);
-        tsv[idem].tenSV[strlen(tsv[idem].tenSV) - 1] = ' ';
         fflush(stdin);
+        fgets(tsv[idem].tenSV, 40, stdin);
+        boxuongdong(tsv[idem].tenSV);
         printf("- Nhap so dien thoai: ");
-        fgets(tsv[idem].sdtSV, 20, stdin);
-        tsv[idem].sdtSV[strlen(tsv[idem].sdtSV) - 1] = ' ';
-        idem++;
-        if (idem == imax) {
-            printf("***** Danh sach sinh vien day! ****\n\n");
-            trolaimenu();
-            break;
-        }
         fflush(stdin);
-        printf("Ban co muon nhap tiep ?\n");
-        printf("<<Nhap Y/y de tiep tuc / Nhan 'ENTER' de tro lai menu>>\n");
-        scanf("%c", &choice);
+        fgets(tsv[idem].sdtSV, 15, stdin);
+        boxuongdong(tsv[idem].sdtSV);
+        idem++;
+    }
+    if (idem == imax) {
+        printf("***** Danh sach sinh vien day! ****\n\n");
     }
 }
 
-// 2. Hien thi danh sach sinh vien.
+// 1.2. Hien thi danh sach sinh vien.
 void hienthiSV() {
-    printf("------------------------------------\n");
+    indaugach();
     printf("  2. Hien thi danh sach sinh vien.\n");
-    printf("------------------------------------\n\n");
-    printf("%-40cDANH SACH SINH VIEN\n", ' ');
-    printf("| %-20s | %-50s | %-20s |\n", "Ma sv", "Ten", "So dien thoai");
+    indaugach();
+    printf("%-29cDANH SACH SINH VIEN\n", ' ');
+    printf("| %-12s | %-19c%-21s | %-15s |\n", "Ma sv", ' ', "Ten", "So dien thoai");
     for (int j = 0; j < idem; j++) {
-        printf("| %-20s | %-50s | %-20s |\n", tsv[j].maSV, tsv[j].tenSV, tsv[j].sdtSV);
+        printf("| %-12s | %-40s | %-15s |\n", tsv[j].maSV, tsv[j].tenSV, tsv[j].sdtSV);
     }
 }
 
-// 3. Luu danh sach sinh vien ra file
+// 1.3. Luu danh sach sinh vien ra file
 void luuSV() {
-    printf("------------------------------------\n");
+    indaugach();
     printf("3. Luu danh sach sinh vien ra file.\n");
-    printf("------------------------------------\n");
+    indaugach();
     sv = fopen("danhsachsv.txt", "a+");
     while (iluutru < idem) {
-        fprintf(sv, "| %-20s | %-50s | %-20s |\n", tsv[iluutru].maSV, tsv[iluutru].tenSV, tsv[iluutru].sdtSV);
+        fprintf(sv, "| %-12s | %-40s | %-15s |\n", tsv[iluutru].maSV, tsv[iluutru].tenSV, tsv[iluutru].sdtSV);
         iluutru++;
     }
     fclose(sv);
-    iluutru = idem;
-    printf("Da luu danh sach moi nhap\n");
+    printf("*** Da luu danh sach moi nhap ***\n");
 }
 
-// 4. Doc danh sach sinh vien tu file
+// 1.4. Doc danh sach sinh vien tu file
 void docSV() {
-    printf("------------------------------------\n");
+    indaugach();
     printf("4. Doc danh sach sinh vien tu file.\n");
-    printf("------------------------------------\n");
+    indaugach();
     sv = fopen("danhsachsv.txt", "r+");
     while (fgets(tmp, sizeof(tmp) * sizeof(char), sv) != NULL) {
         printf("%s", tmp);
@@ -162,7 +155,30 @@ void docSV() {
     fclose(sv);
 }
 
-int main() {
-    menu();
-    return 0;
+//2.1. Ham tro lai menu
+void trolaimenu() {
+    char trolai = 0;
+    printf("*** Nhan 'ENTER' de tro lai MENU ***");
+    fflush(stdin);
+    scanf("%c", &trolai);
+}
+
+//2.2. ham in ra day ky tu '-'
+void indaugach() {
+    printf("------------------------------------\n");
+}
+
+//2.3. Ham thay the \n
+void boxuongdong(char *mang) {
+    mang[strlen(mang) - 1] = ' ';
+}
+
+//2.4. Ham kiem tra ma sinh vien
+void kiemtramasv(char *mang) {
+    while (strlen(mang) != 6) {
+        printf("** LOI: Ma sinh vien phai co 5 ki tu **\n");
+        printf("- Nhap lai ma sinh vien: ");
+        fflush(stdin);
+        fgets(mang, 12, stdin);
+    }
 }
